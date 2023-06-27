@@ -1,14 +1,16 @@
 package routes
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/viniqrz/gin-crud/internal/log/dto"
+	"github.com/viniqrz/gin-crud/internal/use_cases/create_log"
 )
 
 func GetLogRoutes(rg *gin.RouterGroup) {
+	createLogUseCase := *create_log.NewCreateLogUseCase()
+	createLogUseCaseController := create_log.NewCreateLogUseCaseController(createLogUseCase)
+
 	logRouter := rg.Group("/log")
 
 	logRouter.GET("/", func(c *gin.Context) {
@@ -18,13 +20,6 @@ func GetLogRoutes(rg *gin.RouterGroup) {
 	})
 
 	logRouter.POST("/", func(c *gin.Context) {
-		var req dto.CreateLogInput
-        c.BindJSON(&req)
-
-		fmt.Println(req)
-		println("here")
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
+		createLogUseCaseController.Execute(c)
 	})
 }

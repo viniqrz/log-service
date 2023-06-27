@@ -6,8 +6,8 @@ import (
 )
 
 
-func TransformLogCreateInputToDomain(input dto.CreateLogInput) entity.Log {
-	return *entity.NewLog(input.Message)
+func TransformLogCreateInputToDomain(input *dto.CreateLogInput) *entity.Log {
+	return entity.NewLog(input.Message)
 }
 
 func TransformLogDomainToCreateOutput(log entity.Log) *dto.CreateLogOutput {

@@ -1,6 +1,8 @@
 package entity
 
 import (
+	"time"
+
 	"gorm.io/gorm"
 )
 
@@ -14,5 +16,6 @@ type Log struct {
 func NewLog(message string) *Log {
 	return &Log{
 		Message: message,
+		CreatedAt: time.Now().UTC().Format(time.RFC3339),
 	}
 }
