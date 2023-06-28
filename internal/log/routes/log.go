@@ -1,25 +1,24 @@
 package routes
 
 import (
-	"net/http"
+	"database/sql"
 
 	"github.com/gin-gonic/gin"
-	"github.com/viniqrz/gin-crud/internal/use_cases/create_log"
+	"github.com/viniqrz/gin-crud/internal/log/repository"
+	"github.com/viniqrz/gin-crud/internal/log/use_cases/create_log"
+	"github.com/viniqrz/gin-crud/internal/log/use_cases/find_all_logs"
 )
 
-func GetLogRoutes(rg *gin.RouterGroup) {
-	createLogUseCase := *create_log.NewCreateLogUseCase()
+func GetLogRoutes(rg *gin.RouterGroup, db *sql.DB) {
+	logRouter := rg.Group("/log")
+	logRepository := repository.NewLogPSQLRepository(db)
+
+	createLogUseCase := create_log.NewCreateLogUseCase(logRepository)
 	createLogUseCaseController := create_log.NewCreateLogUseCaseController(createLogUseCase)
 
-	logRouter := rg.Group("/log")
+	findAllLogsUseCase := find_all_logs.NewFindAllLogsUseCase(logRepository)
+	findAllLogsUseCaseController := find_all_logs.NewFindAllLogsUseCaseController(findAllLogsUseCase)
 
-	logRouter.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "pong",
-		})
-	})
-
-	logRouter.POST("/", func(c *gin.Context) {
-		createLogUseCaseController.Execute(c)
-	})
+	logRouter.POST("/", HandleRoute(createLogUseCaseController.Execute))
+	logRouter.GET("/", HandleRoute(findAllLogsUseCaseController.Execute))
 }

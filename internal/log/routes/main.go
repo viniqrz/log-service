@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"database/sql"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -8,13 +9,10 @@ import (
 
 var r = gin.Default()
 
-func Run() {
-	GetRoutes()
-	r.Run()
-}
-
-func GetRoutes() {
+func Run(db *sql.DB) {
 	v1 := r.Group("/")
+
+	GetLogRoutes(v1, db)
 
 	r.GET("/", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
@@ -23,5 +21,11 @@ func GetRoutes() {
 		})
 	})
 
-	GetLogRoutes(v1)
+	r.Run()
+}
+
+func HandleRoute(fn func(c *gin.Context)) func(c *gin.Context) {
+	return func(ctx *gin.Context) {
+		fn(ctx)
+	};
 }

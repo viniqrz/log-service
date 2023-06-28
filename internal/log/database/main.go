@@ -1,20 +1,16 @@
 package database
 
 import (
-	"log"
+	"database/sql"
 
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	_ "github.com/lib/pq"
 )
 
 
-func Connect() *gorm.DB {
-	dsn := "host=localhost user=postgres password=postgres dbname=postgres port=5432"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-
+func Connect() *sql.DB {
+	db, err := sql.Open("postgres", "user=postgres password=postgres dbname=postgres sslmode=disable")
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
-	
 	return db
 }

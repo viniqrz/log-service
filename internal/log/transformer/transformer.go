@@ -7,7 +7,7 @@ import (
 
 
 func TransformLogCreateInputToDomain(input *dto.CreateLogInput) *entity.Log {
-	return entity.NewLog(input.Message)
+	return entity.NewLog(input.Message, input.Level)
 }
 
 func TransformLogDomainToCreateOutput(log entity.Log) *dto.CreateLogOutput {

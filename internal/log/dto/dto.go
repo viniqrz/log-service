@@ -6,7 +6,8 @@ type CreateLogInput struct {
 }
 
 type CreateLogOutput struct {
-	ID      int   `json:"id"`
+	ID      string   `json:"id"`
 	Message string `json:"message"`
 	CreatedAt string `json:"created_at"`
+	Level string `json:"level"`
 }
