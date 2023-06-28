@@ -20,5 +20,12 @@ func NewCreateLogUseCase(
 }
 
 func (c *CreateLogUseCase) Execute(input *dto.CreateLogInput) (*entity.Log, error) {
-	return transformer.TransformLogCreateInputToDomain(input), nil
+	log := transformer.TransformLogCreateInputToDomain(input)
+
+	log, err := c.logRepository.Create(log)
+	if (err != nil) {
+		return nil, err
+	}
+
+	return log, nil
 }

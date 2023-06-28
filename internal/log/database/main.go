@@ -8,8 +8,9 @@ import (
 
 
 func Connect() *sql.DB {
-	db, err := sql.Open("postgres", "user=postgres password=postgres dbname=postgres sslmode=disable")
+	db, err := sql.Open("postgres", "postgres://postgres:postgres@db:5432/postgres?sslmode=disable")
 	if err != nil {
+		print("Error connecting to database")
 		panic(err)
 	}
 	return db

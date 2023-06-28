@@ -17,14 +17,14 @@ func NewLogPSQLRepository(db *sql.DB) *LogPSQLRepository {
 }
 
 func (r *LogPSQLRepository) FindAll() ([]*entity.Log, error) {
-	rows, err := r.db.Query("SELECT * FROM logs")
+	rows, err := r.db.Query("SELECT id, message, created_at, level FROM logs AS l")
 	if (err != nil) {
 		return nil, err
 	}
 	logs := make([]*entity.Log, 0)
 	for rows.Next() {
 		log := new(entity.Log)
-		err := rows.Scan(&log.ID, &log.Message, &log.CreatedAt)
+		err := rows.Scan(&log.ID, &log.Message, &log.CreatedAt, &log.Level)
 		if (err != nil) {
 			return nil, err
 		}
@@ -34,7 +34,7 @@ func (r *LogPSQLRepository) FindAll() ([]*entity.Log, error) {
 }
 
 func (r *LogPSQLRepository) Create(log *entity.Log) (*entity.Log, error) {
-	_, err := r.db.Exec("INSERT INTO logs (message, created_at) VALUES ($1, $2)", log.Message, log.CreatedAt)
+	_, err := r.db.Exec("INSERT INTO logs (id, level, message, created_at) VALUES ($1, $2, $3, $4)", log.ID, log.Level, log.Message, log.CreatedAt)
 	if err != nil {
 		return nil, err
 	}
