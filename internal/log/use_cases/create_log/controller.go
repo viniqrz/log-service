@@ -1,12 +1,14 @@
 package create_log
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/viniqrz/gin-crud/internal/log/dto"
+	"github.com/viniqrz/gin-crud/internal/log/exception"
 )
 
 type CreateLogUseCaseController struct {
@@ -26,14 +28,15 @@ func (c *CreateLogUseCaseController) Execute(ctx *gin.Context) {
 	level := dto.Level
 
 	if (level != "ERROR" && level != "WARNING" && level != "INFO" && level != "DEBUG") {
-		ctx.JSON(http.StatusBadRequest, gin.H{"message": "Invalid level"})
+		ctx.Error(errors.New(exception.UnprocessableEntityErrorMessage))
 		ctx.Abort()
 		return
 	}
 
 	res, err := c.useCase.Execute(dto)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 
