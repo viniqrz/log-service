@@ -40,3 +40,11 @@ func (r *LogPSQLRepository) Create(log *entity.Log) (*entity.Log, error) {
 	}
 	return log, nil
 }
+
+func (r *LogPSQLRepository) Delete(id string) error {
+	_, err := r.db.Exec("DELETE FROM logs WHERE id = $1", id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

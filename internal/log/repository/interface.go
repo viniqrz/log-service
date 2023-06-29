@@ -7,5 +7,6 @@ import (
 type LogRepository interface {
 	FindAll() ([]*entity.Log, error)
 	Create(log *entity.Log) (*entity.Log, error)
+	Delete(id string) error
 }
 
