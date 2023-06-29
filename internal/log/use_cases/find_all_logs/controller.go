@@ -19,7 +19,8 @@ func NewFindAllLogsUseCaseController(useCase *FindAllLogsUseCase) *FindAllLogsUs
 func (c *FindAllLogsUseCaseController) Execute(ctx *gin.Context) {
 	res, err := c.useCase.Execute()
 	if (err != nil) {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"message": err.Error()})
+		ctx.Error(err)
+		ctx.Abort()
 		return
 	}
 	ctx.JSON(http.StatusOK, res)
